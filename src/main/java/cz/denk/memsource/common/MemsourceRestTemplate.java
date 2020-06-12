@@ -3,12 +3,14 @@ package cz.denk.memsource.common;
 import cz.denk.memsource.repository.entity.MemsourceCredentials;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriTemplate;
 
 import static org.apache.commons.lang3.Validate.notEmpty;
 import static org.apache.commons.lang3.Validate.notNull;
 
+@Component
 public class MemsourceRestTemplate {
 
     private static final UriTemplate MEMSOURCE_API_TEMPLATE = new UriTemplate("{baseUrl}/{uri}");
