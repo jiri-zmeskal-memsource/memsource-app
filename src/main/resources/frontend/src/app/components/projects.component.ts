@@ -3,6 +3,7 @@ import { Credentials } from '../models/credentials';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { BackendService } from '../services/backend.service';
+import { Project } from '../models/project';
 
 @Component({
   selector: 'projects-page',
@@ -13,6 +14,7 @@ export class ProjectsComponent implements OnInit {
 
   cannotSignInErrorVisible: boolean;
 
+  projects: Project[];
   credentials: Credentials;
   newCredentials: Credentials;
 
@@ -23,9 +25,10 @@ export class ProjectsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.route.data.subscribe((data: { credentials: Credentials, projects: any }) => {
+    this.route.data.subscribe((data: { credentials: Credentials, projects: Project[] }) => {
       this.credentials = data.credentials;
       this.newCredentials = { username: this.credentials.username } as Credentials;
+      this.projects = data.projects;
       this.cannotSignInErrorVisible = false;
     });
   }

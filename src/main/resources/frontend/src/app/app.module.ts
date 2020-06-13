@@ -9,6 +9,7 @@ import { ProjectsComponent } from './components/projects.component';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { ProjectsResolverService } from './resolvers/projects.resolver.service';
 
 
 const routes: Routes = [
@@ -17,7 +18,8 @@ const routes: Routes = [
     component: ProjectsComponent,
     runGuardsAndResolvers: 'always',
     resolve: {
-      credentials: CredentialsResolverService
+      credentials: CredentialsResolverService,
+      projects: ProjectsResolverService
     }
   }
 ];
@@ -36,7 +38,8 @@ const routes: Routes = [
   ],
   providers: [
     BackendService,
-    CredentialsResolverService
+    CredentialsResolverService,
+    ProjectsResolverService
   ],
   bootstrap: [AppComponent]
 })

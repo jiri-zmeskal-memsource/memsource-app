@@ -50,6 +50,24 @@
 <div class="container">
   <div class="row">
     <div class="col"></div>
+    <div *ngIf=isSignedIn() class="col-lg-8 projects-container">
+      <ng-container *ngFor="let proj of projects">
+        <div class="project-container">
+          <h3 class="project-container__title">{{proj.name}}</h3><span>({{proj.status}})</span>
+          <div class="project-container__translations-info"><span>Original language: </span> <b>{{proj.sourceLang}}</b>
+          </div>
+          <div class="project-container__translations-info">
+            <span>Translations: </span>
+            <span *ngFor="let tl of proj.targetLangs; let isLast=last">
+              <b>{{tl}}</b>{{isLast ? '' : ', '}}
+          </span>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+    <div *ngIf="isSignedIn() && projects.length == 0" class="col-lg-12 info-container">
+      <p>No projects for this account</p>
+    </div>
 
     <div *ngIf="!isSignedIn()" class="col-lg-12 info-container">
       <p>No valid credentials provided</p>

@@ -3,14 +3,18 @@ package cz.denk.memsource.service;
 import cz.denk.memsource.common.MemsourceRestTemplate;
 import cz.denk.memsource.common.dto.LoginRequestDto;
 import cz.denk.memsource.common.dto.LoginResponseDto;
+import cz.denk.memsource.common.dto.ProjectsPageResponseDto;
 import cz.denk.memsource.repository.CredentialsRepository;
 import cz.denk.memsource.repository.entity.MemsourceCredentials;
 import cz.denk.memsource.web.dto.CredentialsDto;
 import cz.denk.memsource.web.dto.CredentialsUpdateDto;
+import cz.denk.memsource.web.dto.ProjectDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Iterator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class MemsourceService {
@@ -47,6 +51,18 @@ public class MemsourceService {
 
     public void removeCredentials() {
         credentialsRepository.deleteAll();
+    }
+
+    public List<ProjectDto> listProjects() {
+        Iterator<MemsourceCredentials> credentialsIterator = this.credentialsRepository.findAll().iterator();
+        MemsourceCredentials credentials = credentialsIterator.hasNext() ? credentialsIterator.next() : null;
+
+        if (credentials == null) {
+            throw new CredentialsForAuthenticationMissingException();
+        }
+
+        return memsourceRestTemplate.get("projects", ProjectsPageResponseDto.class, credentials).getBody().getContent().stream()
+                .map(p -> new ProjectDto(p.getName(), p.getStatus(), p.getSourceLang(), p.getTargetLangs())).collect(Collectors.toList());
     }
 
     private MemsourceCredentials convert(CredentialsUpdateDto credentialsCreateDto, String token) {

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Credentials } from '../models/credentials';
+import { Project } from '../models/project';
 
 @Injectable()
 export class BackendService {
@@ -21,5 +22,9 @@ export class BackendService {
 
   removeCredentials(): Observable<any> {
     return this.httpClient.delete('/api/credentials');
+  }
+
+  loadProjects(): Observable<Project[]> {
+    return this.httpClient.get<Project[]>('/api/projects');
   }
 }
