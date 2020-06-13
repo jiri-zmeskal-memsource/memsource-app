@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -41,9 +42,10 @@ public class MemsourceService {
     }
 
     public CredentialsDto getCredentials() {
-        Iterator<MemsourceCredentials> credentialsIterator = this.credentialsRepository.findAll().iterator();
-        if (credentialsIterator.hasNext()) {
-            return convert(credentialsIterator.next());
+        Optional<MemsourceCredentials> memsourceCredentialsOptional = loadMemsourceCredentialsFromRepository();
+
+        if (memsourceCredentialsOptional.isPresent()) {
+            return convert(memsourceCredentialsOptional.get());
         } else {
             throw new CredentialsNotFoundException();
         }
@@ -54,15 +56,24 @@ public class MemsourceService {
     }
 
     public List<ProjectDto> listProjects() {
-        Iterator<MemsourceCredentials> credentialsIterator = this.credentialsRepository.findAll().iterator();
-        MemsourceCredentials credentials = credentialsIterator.hasNext() ? credentialsIterator.next() : null;
+        Optional<MemsourceCredentials> memsourceCredentialsOptional = loadMemsourceCredentialsFromRepository();
 
-        if (credentials == null) {
+        if (!memsourceCredentialsOptional.isPresent()) {
             throw new CredentialsForAuthenticationMissingException();
         }
 
-        return memsourceRestTemplate.get("projects", ProjectsPageResponseDto.class, credentials).getBody().getContent().stream()
+        return memsourceRestTemplate.get("projects", ProjectsPageResponseDto.class, memsourceCredentialsOptional.get()).getBody().getContent().stream()
                 .map(p -> new ProjectDto(p.getName(), p.getStatus(), p.getSourceLang(), p.getTargetLangs())).collect(Collectors.toList());
+    }
+
+
+    private Optional<MemsourceCredentials> loadMemsourceCredentialsFromRepository() {
+        Iterator<MemsourceCredentials> credentialsIterator = this.credentialsRepository.findAll().iterator();
+        if (credentialsIterator.hasNext()) {
+            return Optional.of(credentialsIterator.next());
+        } else {
+            return Optional.empty();
+        }
     }
 
     private MemsourceCredentials convert(CredentialsUpdateDto credentialsCreateDto, String token) {
