@@ -45,6 +45,10 @@ public class MemsourceService {
         }
     }
 
+    public void removeCredentials() {
+        credentialsRepository.deleteAll();
+    }
+
     private MemsourceCredentials convert(CredentialsUpdateDto credentialsCreateDto, String token) {
         return new MemsourceCredentials(credentialsCreateDto.getUsername(), credentialsCreateDto.getPassword(), token);
     }

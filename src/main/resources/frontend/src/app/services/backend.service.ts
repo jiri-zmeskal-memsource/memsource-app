@@ -18,4 +18,8 @@ export class BackendService {
       { username: credentials.username, password: credentials.password }
     );
   }
+
+  removeCredentials(): Observable<any> {
+    return this.httpClient.delete('/api/credentials');
+  }
 }

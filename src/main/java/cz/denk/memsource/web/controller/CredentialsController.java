@@ -3,6 +3,7 @@ package cz.denk.memsource.web.controller;
 import cz.denk.memsource.service.MemsourceService;
 import cz.denk.memsource.web.dto.CredentialsDto;
 import cz.denk.memsource.web.dto.CredentialsUpdateDto;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -26,5 +27,10 @@ public class CredentialsController {
     @GetMapping(CREDENTIALS_URI)
     public CredentialsDto getCredentials() {
         return this.memsourceService.getCredentials();
+    }
+
+    @DeleteMapping(CREDENTIALS_URI)
+    public void removeCredentials() {
+        this.memsourceService.removeCredentials();
     }
 }

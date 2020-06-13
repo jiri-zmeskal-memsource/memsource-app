@@ -43,6 +43,12 @@ export class ProjectsComponent implements OnInit {
     });
   }
 
+  signOut() {
+    this.backendService.removeCredentials().subscribe(res => {
+      this.router.navigate(['projects']);
+    });
+  }
+
   open(content) {
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' }).result.then(
       result => {
