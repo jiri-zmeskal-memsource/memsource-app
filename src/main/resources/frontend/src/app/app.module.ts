@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
 import { RouterModule, Routes } from '@angular/router';
+import { BackendService } from './services/backend.service';
 
 
 const routes: Routes = [];
@@ -15,7 +16,10 @@ const routes: Routes = [];
     BrowserModule,
     RouterModule.forRoot(routes)
   ],
-  providers: [],
+  providers: [
+    BackendService,
+    CredentialsResolverService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
