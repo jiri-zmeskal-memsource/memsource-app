@@ -10,6 +10,7 @@ import cz.denk.memsource.web.dto.CredentialsDto;
 import cz.denk.memsource.web.dto.CredentialsUpdateDto;
 import cz.denk.memsource.web.dto.ProjectDto;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.Iterator;
@@ -66,6 +67,16 @@ public class MemsourceService {
                 .map(p -> new ProjectDto(p.getName(), p.getStatus(), p.getSourceLang(), p.getTargetLangs())).collect(Collectors.toList());
     }
 
+    @Scheduled(fixedRate = 23 * 60 * 60 * 1000)
+    public void refreshMemsourceToken() {
+        Optional<MemsourceCredentials> memsourceCredentialsOptional = loadMemsourceCredentialsFromRepository();
+        if (!memsourceCredentialsOptional.isPresent()) {
+            return;
+        }
+
+        MemsourceCredentials memsourceCredentials = memsourceCredentialsOptional.get();
+        this.createOrUpdateCredentials(new CredentialsUpdateDto(memsourceCredentials.getUsername(), memsourceCredentials.getPassword()));
+    }
 
     private Optional<MemsourceCredentials> loadMemsourceCredentialsFromRepository() {
         Iterator<MemsourceCredentials> credentialsIterator = this.credentialsRepository.findAll().iterator();
