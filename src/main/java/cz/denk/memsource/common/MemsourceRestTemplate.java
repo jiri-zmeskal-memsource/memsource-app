@@ -2,10 +2,15 @@ package cz.denk.memsource.common;
 
 import cz.denk.memsource.repository.entity.MemsourceCredentials;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.DefaultResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriTemplate;
+
+import java.io.IOException;
 
 import static org.apache.commons.lang3.Validate.notEmpty;
 import static org.apache.commons.lang3.Validate.notNull;
@@ -22,6 +27,18 @@ public class MemsourceRestTemplate {
     public MemsourceRestTemplate(RestTemplate restTemplate, @Value("${memsource.api.baseUrl}") String baseUrl) {
         this.baseUrl = baseUrl;
         this.restTemplate = restTemplate;
+
+        this.restTemplate.setErrorHandler(new DefaultResponseErrorHandler() {
+            @Override
+            public void handleError(ClientHttpResponse response) throws IOException {
+                HttpStatus statusCode = HttpStatus.resolve(response.getRawStatusCode());
+                if (statusCode == HttpStatus.UNAUTHORIZED) {
+                    throw new BadCredentialsException();
+                }
+
+                super.handleError(response);
+            }
+        });
     }
 
     public <T> ResponseEntity<T> post(final String uri, Object requestEntity, Class<T> responseType) {
