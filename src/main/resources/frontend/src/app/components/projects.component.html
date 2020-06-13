@@ -8,9 +8,51 @@
           <span *ngIf="!isSignedIn()">Sing in</span>
         </a>
         <div ngbDropdownMenu aria-labelledby="navbarDropdown2" class="dropdown-menu dropdown-menu-right">
-          <a role="button" ngbDropdownItem (click)="open(null)">Sign in as...</a>
+          <a role="button" ngbDropdownItem (click)="open(content)">Sign in as...</a>
         </div>
       </li>
     </ul>
   </div>
 </nav>
+
+<ng-template #content let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Provide Memsource Credentials</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <p *ngIf="cannotSignInErrorVisible">
+      <ngb-alert type="danger" [dismissible]="false">Can't sign in using provided credentials</ngb-alert>
+    </p>
+    <form>
+      <div class="form-group">
+        <label for="username">Username</label>
+        <div class="input-group">
+          <input id="username" [(ngModel)]="newCredentials.username" class="form-control" name="username">
+        </div>
+
+        <label for="password">Password</label>
+        <div class="input-group">
+          <input id="password" [(ngModel)]="newCredentials.password" type="password" class="form-control"
+                 name="password">
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark" (click)="signInAs()">Sign in</button>
+  </div>
+</ng-template>
+
+<div class="container">
+  <div class="row">
+    <div class="col"></div>
+
+    <div *ngIf="!isSignedIn()" class="col-lg-12 info-container">
+      <p>No valid credentials provided</p>
+    </div>
+    <div class="col"></div>
+  </div>
+</div>

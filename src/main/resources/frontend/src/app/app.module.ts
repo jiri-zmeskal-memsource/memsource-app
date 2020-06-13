@@ -15,6 +15,7 @@ const routes: Routes = [
   {
     path: 'projects',
     component: ProjectsComponent,
+    runGuardsAndResolvers: 'always',
     resolve: {
       credentials: CredentialsResolverService
     }
@@ -31,7 +32,7 @@ const routes: Routes = [
     HttpClientModule,
     NgbModule,
     FormsModule,
-    RouterModule.forRoot(routes)
+    RouterModule.forRoot(routes, { onSameUrlNavigation: 'reload' })
   ],
   providers: [
     BackendService,
