@@ -4,6 +4,7 @@ import { NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
 import { RouterModule, Routes } from '@angular/router';
 import { BackendService } from './services/backend.service';
+import { CredentialsResolverService } from './resolvers/credentials.resolver.service';
 
 
 const routes: Routes = [];
