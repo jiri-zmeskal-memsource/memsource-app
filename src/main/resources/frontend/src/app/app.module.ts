@@ -14,6 +14,10 @@ import { ProjectsResolverService } from './resolvers/projects.resolver.service';
 
 const routes: Routes = [
   {
+    path: '**',
+    redirectTo: 'projects'
+  },
+  {
     path: 'projects',
     component: ProjectsComponent,
     runGuardsAndResolvers: 'always',
